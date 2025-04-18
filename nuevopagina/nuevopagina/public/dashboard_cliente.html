@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Cliente</title>
+</head>
+<body>
+  <h1>Bienvenido, Cliente</h1>
+
+  <h2>Mis Propiedades</h2>
+  <div id="misPropiedades"></div>
+
+  <h2>Contratos Firmados</h2>
+  <div id="misContratos"></div>
+
+
+  <p>Correo: <span id="correoUsuario"></span></p>
+  <p>ID: <span id="idUsuario"></span></p>
+ 
+  
+  <script>
+    const nombre = localStorage.getItem('nombre');
+    const correo = localStorage.getItem('correo');
+    const id = localStorage.getItem('id');
+  
+    document.getElementById('nombreUsuario').textContent = nombre || 'Usuario';
+    document.getElementById('correoUsuario').textContent = correo || 'No disponible';
+    document.getElementById('idUsuario').textContent = id || 'No disponible';
+  </script>
+  <button onclick="cerrarSesion()">Cerrar sesión</button>
+
+  <script>
+    function cerrarSesion() {
+      localStorage.clear(); // Limpiar los datos del usuario
+      window.location.href = 'login.html'; // Redirigir al login
+    }
+  </script>
+  
+  
+</body>
+</html>
