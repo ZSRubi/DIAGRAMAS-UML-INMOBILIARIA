@@ -271,6 +271,15 @@
         display: none;
       }
     }
+    /* Animaciones y alerta*/
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+      to { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+    @keyframes fadeOut {
+      from { opacity: 1; transform: translateX(-50%) translateY(0); }
+      to { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+    }
   </style>
 </head>
 <body>
@@ -302,7 +311,10 @@
         <div class="overlay-panel overlay-right">
           <h1>¡Bienvenido de nuevo!</h1>
           <p>Para mantenerse conectado con nosotros, inicie sesión con su información personal</p>
-          <button class="btn transparent" id="signIn">Volver al inicio</button>
+          <button class="btn transparent" id="signIn">Registrate</button>
+          <p style="margin-top: 15px;">
+            <a href="index.html" style="color: white; cursor: pointer; text-decoration: none;">Volver al inicio</a>
+          </p>
         </div>
       </div>
     </div>
@@ -317,34 +329,72 @@
   </div>
 
   <script>
-    document.getElementById('formLogin').addEventListener('submit', async function (e) {
+    document.getElementById('formLogin').addEventListener('submit', async function(e) {
       e.preventDefault();
-
+      
       const correo = document.getElementById('correo').value;
       const password = document.getElementById('password').value;
-
-      const res = await fetch('/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ correo, password })
-      });
-
-      const data = await res.json();
-      alert(data.message);
-
-      if (res.ok) {
-        localStorage.setItem('nombre', data.nombre);
-        localStorage.setItem('rol', data.rol);
-        localStorage.setItem('correo', data.correo);
-        localStorage.setItem('id', data.id);
-
-        if (data.rol === 'admin') {
-          window.location.href = 'dashboard_admin.html';
-        } else if (data.rol === 'agente') {
-          window.location.href = 'dashboard_agente.html';
-        } else if (data.rol === 'cliente') {
-          window.location.href = 'dashboard_cliente.html';
+  
+      // Mostrar estado de carga
+      const submitBtn = this.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+  
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ correo, password })
+        });
+  
+        const data = await res.json();
+        
+        // Mostrar mensaje flotante
+        const showMessage = (message, isSuccess) => {
+          const msgBox = document.createElement('div');
+          msgBox.style = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: ${isSuccess ? '#4CAF50' : '#f44336'};
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+            z-index: 1000;
+            animation: fadeIn 0.3s, fadeOut 0.3s 2.7s;
+          `;
+          msgBox.textContent = message;
+          document.body.appendChild(msgBox);
+          
+          // Eliminar después de 3 segundos
+          setTimeout(() => msgBox.remove(), 3000);
+        };
+  
+        if (res.ok) {
+          showMessage('✅ Inicio de sesión exitoso. Bienvenido!', true);
+          
+          localStorage.setItem('nombre', data.nombre);
+          localStorage.setItem('rol', data.rol);
+          localStorage.setItem('correo', data.correo);
+          localStorage.setItem('id', data.id);
+  
+          // Redirigir después de 1 segundo (para que se vea el mensaje)
+          setTimeout(() => {
+            if (data.rol === 'admin') window.location.href = 'dashboard_admin.html';
+            else if (data.rol === 'agente') window.location.href = 'dashboard_agente.html';
+            else if (data.rol === 'cliente') window.location.href = 'dashboard_cliente.html';
+          }, 1000);
+        } else {
+          showMessage('❌ ' + data.message, false);
         }
+      } catch (error) {
+        showMessage('⚠️ Error de conexión', false);
+        console.error('Error:', error);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Iniciar sesión';
       }
     });
   </script>
@@ -370,11 +420,16 @@
       
     });
   </script>
+  <script>
+    document.getElementById('volverMenu').addEventListener('click', function() {
+      window.location.href = 'index.html';
+    });
+  </script>
 
 <script>
   document.getElementById('signIn').addEventListener('click', function() {
-    // Redirigir a index.html
-    window.location.href = "index.html";
+    // Redirigir a register.html
+    window.location.href = "register.html";
   });
 </script>
 </body>

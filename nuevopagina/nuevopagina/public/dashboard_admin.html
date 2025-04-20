@@ -1,37 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard Admin</title>
-</head>
-<body>
-  <h1>Bienvenido, <span id="nombreUsuario"></span> (Admin)</h1>
-  <p>Correo: <span id="correoUsuario"></span></p>
-  <p>ID: <span id="idUsuario"></span></p>
-  <p>Lista de usuarios, propiedades, etc.</p>
-
-  <script>
-    const nombre = localStorage.getItem('nombre');
-    const correo = localStorage.getItem('correo');
-    const id = localStorage.getItem('id');
-
-    document.getElementById('nombreUsuario').textContent = nombre || 'Usuario';
-    document.getElementById('correoUsuario').textContent = correo || 'No disponible';
-    document.getElementById('idUsuario').textContent = id || 'No disponible';
-  </script>
-  <button onclick="cerrarSesion()">Cerrar sesión</button>
-
-  <script>
-    function cerrarSesion() {
-      localStorage.clear(); // Limpiar los datos del usuario
-      window.location.href = 'login.html'; // Redirigir al login
-    }
-  </script>
-  
-</body>
-</html> -->
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -94,6 +60,7 @@
       cursor: pointer;
       display: flex;
       align-items: center;
+      color: var(--color-blanco);
     }
 
     .nav-item:hover {
@@ -288,6 +255,45 @@
       color: var(--color-blanco);
     }
 
+    /* Secciones */
+    .section {
+      margin-bottom: 3rem;
+      scroll-margin-top: 20px;
+    }
+    
+    .section-title {
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--color-dorado);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .section-title i {
+      color: var(--color-dorado);
+    }
+    
+    /* Enlaces del sidebar */
+    .sidebar-nav a {
+      color: inherit;
+      text-decoration: none;
+      display: block;
+    }
+    
+    .sidebar-nav a:visited {
+      color: inherit;
+    }
+    
+    .sidebar-nav a:hover, 
+    .sidebar-nav a:focus {
+      color: inherit;
+    }
+    
+    .nav-item.active:hover {
+      color: var(--color-gris-oscuro);
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .admin-container {
@@ -316,194 +322,373 @@
       </div>
       
       <nav class="sidebar-nav">
-        <div class="nav-item active">
-          <i class="fas fa-tachometer-alt"></i>
-          Dashboard
-        </div>
-        <div class="nav-item">
-          <i class="fas fa-users"></i>
-          Usuarios
-        </div>
-        <div class="nav-item">
-          <i class="fas fa-home"></i>
-          Propiedades
-        </div>
-        <div class="nav-item">
-          <i class="fas fa-file-contract"></i>
-          Contratos
-        </div>
-        <div class="nav-item">
-          <i class="fas fa-cog"></i>
-          Configuración
-        </div>
+        <a href="#dashboard" class="nav-link">
+          <div class="nav-item active">
+            <i class="fas fa-tachometer-alt"></i>
+            Dashboard
+          </div>
+        </a>
+        <a href="#propiedades" class="nav-link">
+          <div class="nav-item">
+            <i class="fas fa-home"></i>
+            Propiedades
+          </div>
+        </a>
+        <a href="#agentes" class="nav-link">
+          <div class="nav-item">
+            <i class="fas fa-user-tie"></i>
+            Agentes
+          </div>
+        </a>
+        <a href="#clientes" class="nav-link">
+          <div class="nav-item">
+            <i class="fas fa-users"></i>
+            Clientes
+          </div>
+        </a>
+        <a href="#contratos" class="nav-link">
+          <div class="nav-item">
+            <i class="fas fa-file-contract"></i>
+            Contratos
+          </div>
+        </a>
+        <a href="#configuracion" class="nav-link">
+          <div class="nav-item">
+            <i class="fas fa-cog"></i>
+            Configuración
+          </div>
+        </a>
       </nav>
     </aside>
 
     <!-- Main Content -->
     <main class="main-content">
-      <div class="header">
-        <div class="user-info">
-          <div class="user-avatar" id="avatarInitials">A</div>
-          <div class="user-details">
-            <h2 id="nombreUsuario">Administrador</h2>
-            <span class="user-role">Admin</span>
+      <!-- Sección Dashboard -->
+      <section id="dashboard" class="section">
+        <div class="header">
+          <div class="user-info">
+            <div class="user-avatar" id="avatarInitials">A</div>
+            <div class="user-details">
+              <h2 id="nombreUsuario">Administrador</h2>
+              <span class="user-role">Admin</span>
+            </div>
+          </div>
+          
+          <button class="btn btn-logout" onclick="cerrarSesion()">
+            <i class="fas fa-sign-out-alt"></i> Cerrar sesión
+          </button>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+          <div class="stat-card">
+            <i class="fas fa-home"></i>
+            <h3>Propiedades Activas</h3>
+            <div class="value">24</div>
+          </div>
+          
+          <div class="stat-card">
+            <i class="fas fa-user-tie"></i>
+            <h3>Agentes</h3>
+            <div class="value">8</div>
+          </div>
+          
+          <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <h3>Clientes</h3>
+            <div class="value">148</div>
+          </div>
+          
+          <div class="stat-card">
+            <i class="fas fa-file-signature"></i>
+            <h3>Contratos Activos</h3>
+            <div class="value">42</div>
           </div>
         </div>
-        
-        <button class="btn btn-logout" onclick="cerrarSesion()">
-          <i class="fas fa-sign-out-alt"></i> Cerrar sesión
-        </button>
-      </div>
+      </section>
 
-      <!-- Stats Cards -->
-      <div class="stats-container">
-        <div class="stat-card">
-          <i class="fas fa-home"></i>
-          <h3>Propiedades Activas</h3>
-          <div class="value">24</div>
+      <!-- Sección Propiedades -->
+      <section id="propiedades" class="section">
+        <h3 class="section-title"><i class="fas fa-home"></i> Propiedades Recientes</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Dirección</th>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#INM-125</td>
+                <td>Av. Principal 123</td>
+                <td>Casa</td>
+                <td>$250,000</td>
+                <td><span class="status active">Activa</span></td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#INM-124</td>
+                <td>Calle Secundaria 456</td>
+                <td>Departamento</td>
+                <td>$180,000</td>
+                <td><span class="status active">Activa</span></td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#INM-123</td>
+                <td>Boulevard Norte 789</td>
+                <td>Oficina</td>
+                <td>$320,000</td>
+                <td><span class="status pending">En revisión</span></td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
-        
-        <div class="stat-card">
-          <i class="fas fa-users"></i>
-          <h3>Usuarios Registrados</h3>
-          <div class="value">156</div>
-        </div>
-        
-        <div class="stat-card">
-          <i class="fas fa-file-signature"></i>
-          <h3>Contratos este mes</h3>
-          <div class="value">12</div>
-        </div>
-        
-        <div class="stat-card">
-          <i class="fas fa-dollar-sign"></i>
-          <h3>Ingresos mensuales</h3>
-          <div class="value">$25,400</div>
-        </div>
-      </div>
+      </section>
 
-      <!-- Recent Properties -->
-      <div class="table-container">
-        <h3>Propiedades Recientes</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Dirección</th>
-              <th>Tipo</th>
-              <th>Precio</th>
-              <th>Estado</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#INM-125</td>
-              <td>Av. Principal 123</td>
-              <td>Casa</td>
-              <td>$250,000</td>
-              <td><span class="status active">Activa</span></td>
-              <td>
-                <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
-              </td>
-            </tr>
-            <tr>
-              <td>#INM-124</td>
-              <td>Calle Secundaria 456</td>
-              <td>Departamento</td>
-              <td>$180,000</td>
-              <td><span class="status active">Activa</span></td>
-              <td>
-                <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
-              </td>
-            </tr>
-            <tr>
-              <td>#INM-123</td>
-              <td>Boulevard Norte 789</td>
-              <td>Oficina</td>
-              <td>$320,000</td>
-              <td><span class="status pending">En revisión</span></td>
-              <td>
-                <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <!-- Sección Agentes -->
+      <section id="agentes" class="section">
+        <h3 class="section-title"><i class="fas fa-user-tie"></i> Agentes</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Propiedades</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#AGT-008</td>
+                <td>Carlos Mendoza</td>
+                <td>carlos@inmobiliaria.com</td>
+                <td>+51 987654321</td>
+                <td>12</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
+                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#AGT-007</td>
+                <td>Laura Ríos</td>
+                <td>laura@inmobiliaria.com</td>
+                <td>+51 987654322</td>
+                <td>8</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
+                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#AGT-006</td>
+                <td>Jorge Torres</td>
+                <td>jorge@inmobiliaria.com</td>
+                <td>+51 987654323</td>
+                <td>15</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
+                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
-      <!-- Recent Users -->
-      <div class="table-container">
-        <h3>Usuarios Recientes</h3>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nombre</th>
-              <th>Correo</th>
-              <th>Rol</th>
-              <th>Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>#USR-025</td>
-              <td>María González</td>
-              <td>maria@example.com</td>
-              <td>Cliente</td>
-              <td>
-                <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-              </td>
-            </tr>
-            <tr>
-              <td>#USR-024</td>
-              <td>Carlos Mendoza</td>
-              <td>carlos@example.com</td>
-              <td>Agente</td>
-              <td>
-                <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-              </td>
-            </tr>
-            <tr>
-              <td>#USR-023</td>
-              <td>Ana Torres</td>
-              <td>ana@example.com</td>
-              <td>Cliente</td>
-              <td>
-                <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <!-- Sección Clientes -->
+      <section id="clientes" class="section">
+        <h3 class="section-title"><i class="fas fa-users"></i> Clientes</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Intereses</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#CLI-148</td>
+                <td>María González</td>
+                <td>maria@example.com</td>
+                <td>+51 987654324</td>
+                <td>Casas</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
+                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#CLI-147</td>
+                <td>Ana Torres</td>
+                <td>ana@example.com</td>
+                <td>+51 987654325</td>
+                <td>Departamentos</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
+                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#CLI-146</td>
+                <td>Luis Sánchez</td>
+                <td>luis@example.com</td>
+                <td>+51 987654326</td>
+                <td>Oficinas</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
+                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Sección Contratos -->
+      <section id="contratos" class="section">
+        <h3 class="section-title"><i class="fas fa-file-contract"></i> Contratos Recientes</h3>
+        <div class="table-container">
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Propiedad</th>
+                <th>Cliente</th>
+                <th>Agente</th>
+                <th>Fecha</th>
+                <th>Tipo</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#CTR-042</td>
+                <td>Av. Principal 123</td>
+                <td>María González</td>
+                <td>Carlos Mendoza</td>
+                <td>15/05/2023</td>
+                <td>Venta</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-file-pdf"></i> Ver PDF</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#CTR-041</td>
+                <td>Calle Secundaria 456</td>
+                <td>Ana Torres</td>
+                <td>Laura Ríos</td>
+                <td>10/05/2023</td>
+                <td>Alquiler</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-file-pdf"></i> Ver PDF</button>
+                </td>
+              </tr>
+              <tr>
+                <td>#CTR-040</td>
+                <td>Boulevard Norte 789</td>
+                <td>Luis Sánchez</td>
+                <td>Jorge Torres</td>
+                <td>05/05/2023</td>
+                <td>Venta</td>
+                <td>
+                  <button class="btn btn-primary"><i class="fas fa-file-pdf"></i> Ver PDF</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
   </div>
 
   <script>
-    // Datos de prueba (para desarrollo)
-    document.getElementById('nombreUsuario').textContent = "Administrador Demo";
-    document.getElementById('avatarInitials').textContent = "A";
-
-    // En producción, usar estos datos del localStorage:
-    /*
+    // Datos del usuario desde localStorage
     const nombre = localStorage.getItem('nombre');
     const correo = localStorage.getItem('correo');
     const id = localStorage.getItem('id');
     const rol = localStorage.getItem('rol');
 
+    // Mostrar datos del usuario
     if(nombre) {
       document.getElementById('nombreUsuario').textContent = nombre;
       document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase();
     }
 
+    // Verificar rol
     if(rol !== 'admin') {
       window.location.href = 'login.html';
     }
-    */
 
+    // Función para cerrar sesión
     function cerrarSesion() {
-      // localStorage.clear(); // Descomentar en producción
+      localStorage.clear();
       window.location.href = 'login.html';
     }
+
+    // Activar elemento del menú según sección visible
+    const navItems = document.querySelectorAll('.nav-item');
+    const sections = document.querySelectorAll('.section');
+    
+    window.addEventListener('scroll', () => {
+      let current = '';
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.clientHeight;
+        
+        if(pageYOffset >= (sectionTop - 300)) {
+          current = section.getAttribute('id');
+        }
+      });
+      
+      navItems.forEach(item => {
+        item.classList.remove('active');
+        const href = item.parentElement.getAttribute('href');
+        if(href === `#${current}`) {
+          item.classList.add('active');
+        }
+      });
+    });
+
+    // Smooth scroll para los enlaces del menú
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        window.scrollTo({
+          top: targetElement.offsetTop - 20,
+          behavior: 'smooth'
+        });
+        
+        // Actualizar clase activa
+        navItems.forEach(item => item.classList.remove('active'));
+        this.querySelector('.nav-item').classList.add('active');
+      });
+    });
   </script>
 </body>
 </html>
