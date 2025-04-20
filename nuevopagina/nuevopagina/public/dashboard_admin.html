@@ -294,6 +294,36 @@
       color: var(--color-gris-oscuro);
     }
 
+    /* Estilos para el menú desplegable */
+    .nav-parent {
+      position: relative;
+      cursor: pointer;
+    }
+
+    .nav-toggle {
+      margin-left: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: rgba(0,0,0,0.1);
+    }
+
+    .nav-submenu .nav-item {
+      padding-left: 2.5rem;
+    }
+
+    .nav-parent.active + .nav-submenu {
+      max-height: 200px; /* Ajusta según necesidad */
+    }
+
+    .nav-parent.active .nav-toggle {
+      transform: rotate(180deg);
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .admin-container {
@@ -334,28 +364,33 @@
             Propiedades
           </div>
         </a>
-        <a href="#agentes" class="nav-link">
-          <div class="nav-item">
-            <i class="fas fa-user-tie"></i>
-            Agentes
-          </div>
-        </a>
-        <a href="#clientes" class="nav-link">
-          <div class="nav-item">
-            <i class="fas fa-users"></i>
-            Clientes
-          </div>
-        </a>
+        
+        <!-- Menú desplegable de Usuarios -->
+        <div class="nav-item nav-parent">
+          <i class="fas fa-users"></i>
+          Usuarios
+          <i class="fas fa-chevron-down nav-toggle"></i>
+        </div>
+        <div class="nav-submenu">
+          <a href="#agentes" class="nav-link">
+            <div class="nav-item">
+              <i class="fas fa-user-tie"></i>
+              Agentes
+            </div>
+          </a>
+          <a href="#clientes" class="nav-link">
+            <div class="nav-item">
+              <i class="fas fa-user-friends"></i>
+              Clientes
+            </div>
+          </a>
+        </div>
+        <!-- Fin del menú desplegable -->
+        
         <a href="#contratos" class="nav-link">
           <div class="nav-item">
             <i class="fas fa-file-contract"></i>
             Contratos
-          </div>
-        </a>
-        <a href="#configuracion" class="nav-link">
-          <div class="nav-item">
-            <i class="fas fa-cog"></i>
-            Configuración
           </div>
         </a>
       </nav>
@@ -431,6 +466,7 @@
                 <td><span class="status active">Activa</span></td>
                 <td>
                   <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
                 </td>
               </tr>
               <tr>
@@ -441,6 +477,7 @@
                 <td><span class="status active">Activa</span></td>
                 <td>
                   <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
                 </td>
               </tr>
               <tr>
@@ -451,10 +488,12 @@
                 <td><span class="status pending">En revisión</span></td>
                 <td>
                   <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
                 </td>
               </tr>
             </tbody>
           </table>
+          
         </div>
       </section>
 
@@ -481,8 +520,9 @@
                 <td>+51 987654321</td>
                 <td>12</td>
                 <td>
-                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
+                  <button class="btn" style="background: #3498db; color: white;"><i class="fas fa-envelope"></i> Contactar</button>
                 </td>
               </tr>
               <tr>
@@ -492,8 +532,9 @@
                 <td>+51 987654322</td>
                 <td>8</td>
                 <td>
-                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
+                  <button class="btn" style="background: #3498db; color: white;"><i class="fas fa-envelope"></i> Contactar</button>
                 </td>
               </tr>
               <tr>
@@ -503,8 +544,9 @@
                 <td>+51 987654323</td>
                 <td>15</td>
                 <td>
-                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
+                  <button class="btn" style="background: #3498db; color: white;"><i class="fas fa-envelope"></i> Contactar</button>
                 </td>
               </tr>
             </tbody>
@@ -535,8 +577,9 @@
                 <td>+51 987654324</td>
                 <td>Casas</td>
                 <td>
-                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
+                  <button class="btn" style="background: #3498db; color: white;"><i class="fas fa-envelope"></i> Contactar</button>
                 </td>
               </tr>
               <tr>
@@ -546,8 +589,9 @@
                 <td>+51 987654325</td>
                 <td>Departamentos</td>
                 <td>
-                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
+                  <button class="btn" style="background: #3498db; color: white;"><i class="fas fa-envelope"></i> Contactar</button>
                 </td>
               </tr>
               <tr>
@@ -557,8 +601,9 @@
                 <td>+51 987654326</td>
                 <td>Oficinas</td>
                 <td>
-                  <button class="btn btn-primary"><i class="fas fa-eye"></i> Ver</button>
-                  <button class="btn btn-danger"><i class="fas fa-envelope"></i> Contactar</button>
+                  <button class="btn btn-primary"><i class="fas fa-edit"></i> Editar</button>
+                  <button class="btn btn-danger"><i class="fas fa-trash"></i> Eliminar</button>
+                  <button class="btn" style="background: #3498db; color: white;"><i class="fas fa-envelope"></i> Contactar</button>
                 </td>
               </tr>
             </tbody>
@@ -624,6 +669,10 @@
   </div>
 
   <script>
+    // Manejo del menú desplegable
+    document.querySelector('.nav-parent').addEventListener('click', function() {
+      this.classList.toggle('active');
+    });
     // Datos del usuario desde localStorage
     const nombre = localStorage.getItem('nombre');
     const correo = localStorage.getItem('correo');
