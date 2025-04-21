@@ -673,11 +673,17 @@
     document.querySelector('.nav-parent').addEventListener('click', function() {
       this.classList.toggle('active');
     });
-    // Datos del usuario desde localStorage
-    const nombre = localStorage.getItem('nombre');
-    const correo = localStorage.getItem('correo');
-    const id = localStorage.getItem('id');
-    const rol = localStorage.getItem('rol');
+    // Obtener datos del usuario del localStorage
+    const nombre = localStorage.getItem('nombre') || "Administrador Demo"; // Si no hay nombre en localStorage, usa el demo
+    const correo = localStorage.getItem('correo') || "admin@demo.com";
+    const id = localStorage.getItem('id') || "ADM-123";
+    const rol = localStorage.getItem('rol') || "admin"; // Rol por defecto
+
+    // Asignar valores al DOM
+    document.getElementById('nombreUsuario').textContent = nombre;
+    document.getElementById('correoUsuario').textContent = correo;
+    document.getElementById('idUsuario').textContent = id;
+    document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase(); // Inicial del nombre
 
     // Mostrar datos del usuario
     if(nombre) {

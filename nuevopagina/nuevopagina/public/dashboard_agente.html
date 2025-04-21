@@ -282,8 +282,8 @@
       <div class="user-info">
         <div class="user-avatar" id="avatarInitials">A</div>
         <div class="user-details">
-          <h1 id="nombreUsuario">Nombre Agente</h1>
-          <span class="user-role">Agente Inmobiliario</span>
+          <h1 id="nombreUsuario">Agente Inmobiliario</h1>
+          <span class="user-role">Agente</span>
           <p class="user-contact">Correo: <span id="correoUsuario">agente@inmobiliaria.com</span> | ID: <span id="idUsuario">AGT-001</span></p>
         </div>
       </div>
@@ -497,25 +497,20 @@
   </div>
 
   <script>
-    // Obtener datos del usuario del localStorage
-    // const nombre = localStorage.getItem('nombre');
-    // const correo = localStorage.getItem('correo');
-    // const id = localStorage.getItem('id');
-    // const rol = localStorage.getItem('rol');
-    document.getElementById('nombreUsuario').textContent = "Administrador Demo";
-    document.getElementById('correoUsuario').textContent = "admin@demo.com";
-    document.getElementById('idUsuario').textContent = "ADM-123";
+    // Obtener datos del usuario del localStorage o usar valores demo
+    const nombre = localStorage.getItem('nombre') || "Administrador Demo";
+    const correo = localStorage.getItem('correo') || "admin@demo.com";
+    const id = localStorage.getItem('id') || "ADM-123";
+    const rol = localStorage.getItem('rol') || "admin";
 
-    // Mostrar datos del usuario
-    if(nombre) {
-      document.getElementById('nombreUsuario').textContent = nombre;
-      document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase();
-    }
-    if(correo) document.getElementById('correoUsuario').textContent = correo;
-    if(id) document.getElementById('idUsuario').textContent = id;
+    // Asignar valores al DOM (esto es suficiente, no necesitas repetirlo)
+    document.getElementById('nombreUsuario').textContent = nombre;
+    document.getElementById('correoUsuario').textContent = correo;
+    document.getElementById('idUsuario').textContent = id;
+    document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase();
 
-    // Verificar si el usuario es agente
-    if(rol !== 'agente') {
+    // Verificar rol (esto previene acceso no autorizado)
+    if(rol !== 'agente' && rol !== 'admin') {  // Permite tanto agentes como admins
       window.location.href = 'login.html';
     }
 
