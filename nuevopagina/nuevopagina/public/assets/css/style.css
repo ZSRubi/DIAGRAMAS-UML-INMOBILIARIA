@@ -311,6 +311,7 @@ body.nav-active { overflow: hidden; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
 .section-subtitle {
@@ -904,12 +905,20 @@ body.nav-active { overflow: hidden; }
 
 .service .section-text { margin-block-end: 40px; }
 
-.service-card { overflow: hidden; }
+.service-card { 
+  overflow: hidden;
+  padding-bottom: 25px; /* Espacio bajo cada card */
+}
 
 .service-card .has-before {
   padding-block: 30px;
-  margin-block-end: 26px;
+  margin-block-end: 30px; /* Aumenté de 26px a 30px */
   z-index: 1;
+}
+
+.service-card .card-content {
+  padding: 0 15px; /* Añadí padding horizontal */
+  margin-top: 20px; /* Espacio entre imagen y texto */
 }
 
 .service-card .has-before::before {
@@ -933,13 +942,33 @@ body.nav-active { overflow: hidden; }
   transition-delay: 300ms;
 }
 
-.service-card .card-banner { transition: var(--transition-2); }
+.service-card .card-banner { 
+  transition: var(--transition-2);
+  margin-bottom: 15px; /* Espacio bajo la imagen */
+}
 
 .service-card:is(:hover, :focus-within) .card-banner { transform: scale(1.05); }
 
-.service .card-title { margin-block-end: 12px; }
+.service .card-title { 
+  margin-block-end: 15px; /* Aumenté de 12px a 15px */
+  padding: 0 10px; /* Pequeño padding para el texto */
+}
 
+/* Espaciado para las cards de servicio */
+.service-card {
+  padding-bottom: 30px;
+}
 
+.card-content {
+  padding: 25px 15px 0;
+  margin-top: 20px;
+}
+
+.title-4.card-title {
+  margin: 0 0 15px;
+  display: inline-block;
+  padding: 0 10px;
+}
 
 
 
