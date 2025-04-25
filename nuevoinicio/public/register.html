@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Registro de Usuario</title>
+</head>
+<body>
+  <h2>Registro de Usuario</h2>
+  <form id="formRegistro">
+    <input type="text" id="nombre" placeholder="Nombre completo" required><br>
+    <input type="email" id="correo" placeholder="Correo electrónico" required><br>
+    <input type="password" id="password" placeholder="Contraseña" required><br>
+    <select id="rol" required>
+      <option value="">Selecciona un rol</option>
+      <option value="administrador">Administrador</option>
+      <option value="agente">Agente</option>
+      <option value="cliente">Cliente</option>
+    </select><br><br>
+    <button type="submit">Registrarse</button>
+  </form>
+
+  <script>
+    document.getElementById('formRegistro').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const nombre = document.getElementById('nombre').value;
+      const correo = document.getElementById('correo').value;
+      const password = document.getElementById('password').value;
+      const rol = document.getElementById('rol').value;
+
+      try {
+        const res = await fetch('/api/usuarios/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ nombre, correo, password, rol })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert('✅ Usuario registrado con éxito');
+          window.location.href = 'login.html';
+        } else {
+          alert('❌ Error: ' + data.message);
+        }
+      } catch (err) {
+        alert('❌ Error en la conexión con el servidor');
+      }
+    });
+  </script>
+</body>
+</html>
