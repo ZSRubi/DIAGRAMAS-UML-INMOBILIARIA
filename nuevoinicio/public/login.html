@@ -364,6 +364,12 @@
         if (res.ok) {
           showMessage(`✅ Bienvenido, ${data.nombre}`, true);
           
+          // GUARDAR DATOS EN LOCALSTORAGE (AÑADE ESTO)
+          localStorage.setItem('nombre', data.nombre);
+          localStorage.setItem('correo', data.correo || ''); // Usa valor por defecto si no existe
+          localStorage.setItem('id', data.id || '');
+          localStorage.setItem('rol', data.rol);
+          
           // Redirigir según el rol
           setTimeout(() => {
             if (data.rol === 'administrador') {
@@ -374,6 +380,21 @@
               window.location.href = 'dashboard_cliente.html';
             }
           }, 1000);
+        
+
+        // if (res.ok) {
+        //   showMessage(`✅ Bienvenido, ${data.nombre}`, true);
+          
+        //   // Redirigir según el rol
+        //   setTimeout(() => {
+        //     if (data.rol === 'administrador') {
+        //       window.location.href = 'dashboard_admin.html';
+        //     } else if (data.rol === 'agente') {
+        //       window.location.href = 'dashboard_agente.html';
+        //     } else {
+        //       window.location.href = 'dashboard_cliente.html';
+        //     }
+        //   }, 1000);
         } else {
           showMessage('❌ ' + data.message, false);
         }

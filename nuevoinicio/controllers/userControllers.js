@@ -30,7 +30,7 @@ const login = async (req, res) => {
       rol: usuario.rol,
       nombre: usuario.nombre,
       correo: usuario.correo,
-      id: usuario._id
+      id: usuario._id.toString() 
     });
   } catch (err) {
     res.status(500).json({ message: 'Error en el servidor' });

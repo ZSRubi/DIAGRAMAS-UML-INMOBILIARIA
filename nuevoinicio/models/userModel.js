@@ -9,5 +9,3 @@ const userSchema = new mongoose.Schema({
 
 module.exports = mongoose.model('Usuario', userSchema);
 
-
-userModel.js
