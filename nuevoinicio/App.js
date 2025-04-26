@@ -23,3 +23,11 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`✅ Servidor activo en http://localhost:${PORT}`);
 });
+
+
+// Agrega estas líneas donde configuras tus rutas
+const propertyRoutes = require('./routers/propiedadRouters');
+app.use('/api/properties', propertyRoutes);
+
+// Para servir archivos estáticos
+app.use('/uploads', express.static('uploads'));
