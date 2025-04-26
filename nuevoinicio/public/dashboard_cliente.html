@@ -1,45 +1,3 @@
-<!-- <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>Dashboard Cliente</title>
-</head>
-<body>
-  <h1>Bienvenido, Cliente</h1>
-
-  <h2>Mis Propiedades</h2>
-  <div id="misPropiedades"></div>
-
-  <h2>Contratos Firmados</h2>
-  <div id="misContratos"></div>
-
-
-  <p>Correo: <span id="correoUsuario"></span></p>
-  <p>ID: <span id="idUsuario"></span></p>
- 
-  
-  <script>
-    const nombre = localStorage.getItem('nombre');
-    const correo = localStorage.getItem('correo');
-    const id = localStorage.getItem('id');
-  
-    document.getElementById('nombreUsuario').textContent = nombre || 'Usuario';
-    document.getElementById('correoUsuario').textContent = correo || 'No disponible';
-    document.getElementById('idUsuario').textContent = id || 'No disponible';
-  </script>
-  <button onclick="cerrarSesion()">Cerrar sesión</button>
-
-  <script>
-    function cerrarSesion() {
-      localStorage.clear(); // Limpiar los datos del usuario
-      window.location.href = 'login.html'; // Redirigir al login
-    }
-  </script>
-  
-  
-</body>
-</html> -->
-
 
 <!DOCTYPE html>
 <html lang="es">
@@ -382,36 +340,311 @@
       font-size: 0.8em;
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .contract-item .visit-form {
-        padding: 20px;
-      }
-      
-      .contract-item .visit-form h3 {
-        font-size: 1.3rem;
-      }
+    /* Contenedor de propiedades con scroll */
+    .properties-scroll-container {
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
     }
-        
 
-    @media (max-width: 768px) {
-      .user-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1.5rem;
-      }
-      
-      .user-info {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .properties-grid {
-        grid-template-columns: 1fr;
-      }
-
-      
+    .properties-scroll {
+      display: flex;
+      gap: 1.5rem;
+      padding-bottom: 1rem;
+      width: max-content;
     }
+
+    .property-card {
+      min-width: 320px;
+      background-color: var(--color-blanco);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      transition: transform 0.3s ease;
+    }
+
+    .property-image {
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .property-badge {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background-color: var(--color-dorado);
+      color: var(--color-gris-oscuro);
+      padding: 0.3rem 0.8rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.8rem;
+    }
+
+    .property-details {
+      padding: 1.5rem;
+    }
+
+    .property-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.8rem;
+      color: var(--color-gris-oscuro);
+    }
+
+    .property-description {
+      color: var(--color-gris-medio);
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .property-meta {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: var(--color-gris-medio);
+    }
+
+    .property-meta i {
+      margin-right: 0.3rem;
+    }
+
+    .btn-location {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: none;
+      border: none;
+      color: var(--color-dorado);
+      font-weight: 500;
+      cursor: pointer;
+      padding: 0.5rem 0;
+      margin-bottom: 1rem;
+    }
+
+    .property-agent {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      padding-top: 1rem;
+      border-top: 1px solid var(--color-gris-claro);
+    }
+
+    .agent-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: var(--color-gris-claro);
+      color: var(--color-gris-oscuro);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+    }
+
+    .agent-info {
+      font-size: 0.9rem;
+    }
+
+    .agent-info strong {
+      display: block;
+      color: var(--color-gris-oscuro);
+    }
+
+    /* Modal para mapa */
+    #mapModal .modal-content {
+      max-width: 800px;
+      padding: 2rem;
+    }
+
+    #mapTitle {
+      color: var(--color-gris-oscuro);
+      margin-bottom: 1rem;
+    }
+
+    /* Contenedor del formulario */
+    .form-container {
+      background-color: var(--color-blanco);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      border-top: 3px solid var(--color-dorado);
+    }
+
+    /* Formulario horizontal */
+    .visit-form .form-row {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .visit-form .form-group {
+      flex: 1;
+      min-width: 180px;
+    }
+
+    .visit-form label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--color-gris-oscuro);
+      font-weight: 500;
+    }
+
+    .visit-form select,
+    .visit-form input[type="date"] {
+      width: 100%;
+      padding: 0.7rem;
+      border: 1px solid var(--color-gris-claro);
+      border-radius: 4px;
+      background-color: var(--color-fondo);
+    }
+
+    .btn-submit {
+      background-color: var(--color-dorado);
+      color: var(--color-gris-oscuro);
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s;
+      height: 40px;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--color-dorado-oscuro);
+      color: var(--color-blanco);
+    }
+
+    /* Contenedor de visitas */
+    .visits-container {
+      background-color: var(--color-blanco);
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .visits-container h3 {
+      color: var(--color-gris-oscuro);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .visits-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .visit-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border-radius: 6px;
+      background-color: var(--color-fondo);
+      border-left: 4px solid var(--color-dorado);
+    }
+
+    .visit-info {
+      flex: 1;
+    }
+
+    .visit-property {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .visit-date {
+      color: var(--color-gris-medio);
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .visit-status {
+      display: inline-block;
+      padding: 0.2rem 0.7rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-top: 0.5rem;
+    }
+
+    .status-confirmed {
+      background-color: rgba(39, 174, 96, 0.1);
+      color: #27ae60;
+    }
+
+    .status-pending {
+      background-color: rgba(243, 156, 18, 0.1);
+      color: #f39c12;
+    }
+
+    .btn-cancel {
+      background: none;
+      border: none;
+      color: var(--color-gris-medio);
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: all 0.3s;
+    }
+
+    .btn-cancel:hover {
+      color: #e74c3c;
+    }
+    /* CORRECCIONES PARA EL LAYOUT */
+.dashboard-section {
+  margin-bottom: 2.5rem;
+  background: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.compact-visits-container {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.visit-form-box, .visits-list-box {
+  margin-bottom: 1.5rem;
+}
+
+/* Asegura que los elementos del formulario no se estiren */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  align-items: end;
+}
+
+/* Corrige el desbordamiento en móviles */
+@media (max-width: 768px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .compact-visit-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .visit-main-info {
+    margin-bottom: 1rem;
+  }
+}
+
   </style>
 </head>
 <body>
@@ -437,47 +670,117 @@
         <i class="fas fa-home"></i> Mis Propiedades
       </h2>
       
-      <div class="properties-grid">
-        <!-- Propiedad 1 -->
-        <div class="property-card">
-          <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
-          <div class="property-details">
-            <h3 class="property-title">Casa Residencial en Bosque</h3>
-            <p class="property-location">
-              <i class="fas fa-map-marker-alt"></i> Av. Bosques 123, Ciudad
-            </p>
-            <span class="property-status status-active">Adquisición en proceso</span>
-            <p class="property-price">$350,000 <span>USD</span></p>
-            <a href="#" class="btn-action">
-              <i class="fas fa-eye"></i> Ver detalles
-            </a>
-          </div>
-        </div>
+      <!-- Sección Propiedades -->
+      <section class="dashboard-section">
+        <h2 class="section-title">
+          <i class="fas fa-home"></i> Propiedades Disponibles
+        </h2>
         
-        <!-- Propiedad 2 -->
-        <div class="property-card">
-          <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');"></div>
-          <div class="property-details">
-            <h3 class="property-title">Departamento Premium</h3>
-            <p class="property-location">
-              <i class="fas fa-map-marker-alt"></i> Calle Central 456, Ciudad
-            </p>
-            <span class="property-status status-active">Documentación pendiente</span>
-            <p class="property-price">$180,000 <span>USD</span></p>
-            <a href="#" class="btn-action">
-              <i class="fas fa-eye"></i> Ver detalles
-            </a>
+        <div class="properties-scroll-container">
+          <div class="properties-scroll">
+            <!-- Propiedad 1 -->
+            <div class="property-card">
+              <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1564013799919-ab600027ffc6?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+                <div class="property-badge">En Venta</div>
+              </div>
+              <div class="property-details">
+                <h3 class="property-title">Casa Residencial en Bosque</h3>
+                <p class="property-description">Amplia casa de 3 dormitorios con jardín y piscina, acabados de lujo en zona residencial exclusiva.</p>
+                
+                <div class="property-meta">
+                  <span><i class="fas fa-ruler-combined"></i> 240 m²</span>
+                  <span><i class="fas fa-bed"></i> 3 Dorm.</span>
+                  <span><i class="fas fa-bath"></i> 2 Baños</span>
+                </div>
+                
+                <button class="btn-location" data-address="Av. Bosques 123, Ciudad">
+                  <i class="fas fa-map-marker-alt"></i> Ver Ubicación
+                </button>
+                
+                <div class="property-agent">
+                  <div class="agent-avatar">AH</div>
+                  <div class="agent-info">
+                    <strong>Ana Herrera</strong>
+                    <span>Agente Inmobiliario</span>
+                  </div>
+                </div>
+                
+                <a href="#" class="btn-action">
+                  <i class="fas fa-envelope"></i> Contactar Agente
+                </a>
+              </div>
+            </div>
+            
+            <!-- Propiedad 2 -->
+            <div class="property-card">
+              <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1493809842364-78817add7ffb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+                <div class="property-badge">En Alquiler</div>
+              </div>
+              <div class="property-details">
+                <h3 class="property-title">Departamento Premium</h3>
+                <p class="property-description">Moderno departamento en torre exclusiva con amenities: gimnasio, piscina y seguridad 24/7.</p>
+                
+                <div class="property-meta">
+                  <span><i class="fas fa-ruler-combined"></i> 120 m²</span>
+                  <span><i class="fas fa-bed"></i> 2 Dorm.</span>
+                  <span><i class="fas fa-bath"></i> 2 Baños</span>
+                </div>
+                
+                <button class="btn-location" data-address="Calle Central 456, Ciudad">
+                  <i class="fas fa-map-marker-alt"></i> Ver Ubicación
+                </button>
+                
+                <div class="property-agent">
+                  <div class="agent-avatar">CM</div>
+                  <div class="agent-info">
+                    <strong>Carlos Mendoza</strong>
+                    <span>Agente Inmobiliario</span>
+                  </div>
+                </div>
+                
+                <a href="#" class="btn-action">
+                  <i class="fas fa-envelope"></i> Contactar Agente
+                </a>
+              </div>
+            </div>
+            
+            <!-- Propiedad 3 -->
+            <div class="property-card">
+              <div class="property-image" style="background-image: url('https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80');">
+                <div class="property-badge">En Venta</div>
+              </div>
+              <div class="property-details">
+                <h3 class="property-title">Oficina Corporativa</h3>
+                <p class="property-description">Oficinas en zona financiera, listas para mudarse, con estacionamiento privado y áreas comunes.</p>
+                
+                <div class="property-meta">
+                  <span><i class="fas fa-ruler-combined"></i> 350 m²</span>
+                  <span><i class="fas fa-building"></i> 4 Oficinas</span>
+                  <span><i class="fas fa-car"></i> 5 Estac.</span>
+                </div>
+                
+                <button class="btn-location" data-address="Boulevard Norte 789, Ciudad">
+                  <i class="fas fa-map-marker-alt"></i> Ver Ubicación
+                </button>
+                
+                <div class="property-agent">
+                  <div class="agent-avatar">AT</div>
+                  <div class="agent-info">
+                    <strong>Ana Torres</strong>
+                    <span>Agente Comercial</span>
+                  </div>
+                </div>
+                
+                <a href="#" class="btn-action">
+                  <i class="fas fa-envelope"></i> Contactar Agente
+                </a>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="dashboard-section">
-      <h2 class="section-title">
-        <i class="fas fa-file-contract"></i> Mis Contratos
-      </h2>
       
-      <div class="contracts-list">
         <!-- Contrato 1 -->
         <div class="contract-item">
           <div class="contract-info">
@@ -511,82 +814,108 @@
             </a>
           </div>
         </div>
-        
-        <!-- Estado vacío (se muestra si no hay contratos) -->
-        <!-- <div class="empty-state">
-          <i class="fas fa-folder-open"></i>
-          <h3>Aún no tienes contratos</h3>
-          <p>Cuando firmes un contrato, aparecerá aquí</p>
-        </div> -->
       </div>
     </section>
 
+    <!-- Sección de visitas CORREGIDA -->
     <section class="dashboard-section">
       <h2 class="section-title">
-        <i class="fas fa-calendar-alt"></i> Mis Visitas Programadas
+        <i class="fas fa-calendar-alt"></i> Gestión de Visitas
       </h2>
       
-      <div class="contracts-list">
-        <!-- Ejemplo de visita -->
-        <div class="contract-item">
-          <div class="contract-info">
-            <h3>Visita a Casa Residencial</h3>
-            <p class="contract-date">
-              <i class="far fa-calendar"></i> 25/11/2023 - 10:00 AM
-            </p>
-            <p><span class="status-active">Confirmada</span></p>
+      <div class="compact-visits-container">
+        <!-- Formulario en un box -->
+        <div class="visit-form-box">
+          <div class="form-header">
+            <i class="fas fa-calendar-plus"></i>
+            <h3>Programar Nueva Visita</h3>
           </div>
-          <div class="contract-actions">
-            <button class="btn-action" onclick="cancelarVisita('VIS-001')">
-              <i class="fas fa-times"></i> Cancelar
-            </button>
-          </div>
-        </div>
-         
-         <!-- Formulario de visita -->
-
-        <div class="contract-item">
-          <form id="solicitarVisitaForm" class="visit-form">
-            <h3><i class="fas fa-calendar-alt"></i> Solicitar Nueva Visita</h3>
-            
-            <div class="form-group">
-              <label for="propiedadVisita"><i class="fas fa-home"></i> Propiedad:</label>
-              <select id="propiedadVisita" required>
-                <option value="">Seleccionar propiedad</option>
-                <option value="PROP-001">Casa Residencial en Bosque</option>
-                <option value="PROP-002">Departamento Premium</option>
-              </select>
+          
+          <form id="solicitarVisitaForm" class="compact-visit-form">
+            <div class="form-grid">
+              <div class="form-field">
+                <label for="propiedadVisita"><i class="fas fa-home"></i> Propiedad</label>
+                <select id="propiedadVisita" required>
+                  <option value="">Seleccionar propiedad</option>
+                  <option value="PROP-001">Casa Residencial en Bosque</option>
+                  <option value="PROP-002">Departamento Premium</option>
+                </select>
+              </div>
+              
+              <div class="form-field">
+                <label for="fechaVisita"><i class="far fa-calendar"></i> Fecha</label>
+                <input type="date" id="fechaVisita" required>
+              </div>
+              
+              <div class="form-field">
+                <label for="horaVisita"><i class="far fa-clock"></i> Hora</label>
+                <select id="horaVisita" required>
+                  <option value="09:00">9:00 AM</option>
+                  <option value="10:00">10:00 AM</option>
+                  <option value="11:00">11:00 AM</option>
+                  <option value="15:00">3:00 PM</option>
+                  <option value="16:00">4:00 PM</option>
+                </select>
+              </div>
+              
+              <button type="submit" class="compact-submit-btn">
+                <i class="fas fa-paper-plane"></i> Solicitar Visita
+              </button>
             </div>
-            
-            <div class="form-group">
-              <label for="fechaVisita"><i class="far fa-calendar"></i> Fecha:</label>
-              <input type="date" id="fechaVisita" required>
-            </div>
-            
-            <div class="form-group">
-              <label for="horaVisita"><i class="far fa-clock"></i> Hora:</label>
-              <select id="horaVisita" required>
-                <option value="09:00">9:00 AM</option>
-                <option value="10:00">10:00 AM</option>
-                <!-- Más opciones... -->
-              </select>
-            </div>
-            
-            <button type="submit" class="btn-action">
-              <i class="fas fa-paper-plane"></i> Solicitar Visita
-            </button>
           </form>
         </div>
-
-         <!-- Formulario de visita -->
-
-
-
-
-
+        
+        <!-- Lista de visitas en un box -->
+        <div class="visits-list-box">
+          <div class="list-header">
+            <i class="fas fa-calendar-check"></i>
+            <h3>Visitas Programadas</h3>
+          </div>
+          
+          <div class="compact-visits-list">
+            <!-- Visita 1 -->
+            <div class="compact-visit-item">
+              <div class="visit-main-info">
+                <div class="visit-icon">
+                  <i class="fas fa-home"></i>
+                </div>
+                <div class="visit-details">
+                  <strong>Casa Residencial en Bosque</strong>
+                  <div class="visit-meta">
+                    <span><i class="far fa-calendar"></i> 25/11/2023 - 10:00 AM</span>
+                    <span class="status-badge confirmed">Confirmada</span>
+                  </div>
+                </div>
+              </div>
+              <button class="compact-cancel-btn">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+            
+            <!-- Visita 2 -->
+            <div class="compact-visit-item">
+              <div class="visit-main-info">
+                <div class="visit-icon">
+                  <i class="fas fa-home"></i>
+                </div>
+                <div class="visit-details">
+                  <strong>Departamento Premium</strong>
+                  <div class="visit-meta">
+                    <span><i class="far fa-calendar"></i> 28/11/2023 - 3:00 PM</span>
+                    <span class="status-badge pending">Pendiente</span>
+                  </div>
+                </div>
+              </div>
+              <button class="compact-cancel-btn">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
-  </div>
+  </div> 
+
 
   <script>
    // Obtener datos del usuario del localStorage
@@ -600,8 +929,6 @@
     document.getElementById('correoUsuario').textContent = correo;
     document.getElementById('idUsuario').textContent = id;
     document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase(); // Inicial del nombre
-
-
 
     // Mostrar datos del usuario
     if(nombre) {
@@ -621,7 +948,16 @@
       localStorage.clear();
       window.location.href = 'login.html';
     }
+
+    // Cerrar modal
+    document.querySelector('.close-modal').addEventListener('click', function() {
+      document.getElementById('mapModal').style.display = 'none';
+    });
+
+
   </script>
+
+
 </body>
 </html>
 
