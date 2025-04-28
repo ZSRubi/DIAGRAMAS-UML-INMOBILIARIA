@@ -1,12 +1,27 @@
 const mongoose = require('mongoose');
 
 const propertySchema = new mongoose.Schema({
-  address: { type: String, required: true },
-  type: { type: String, enum: ['Casa', 'Departamento', 'Oficina', 'Terreno'], required: true },
-  price: { type: Number, required: true },
-  photos: [String], // Array de URLs de imágenes
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  createdAt: { type: Date, default: Date.now }
+  address: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    required: true
+  },
+  price: {
+    type: Number,
+    required: true
+  },
+  photos: [{
+    type: String // Guardamos solo el nombre del archivo
+  }],
+  createdAt: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-module.exports = mongoose.model('Property', propertySchema);
+const Property = mongoose.model('Property', propertySchema);
+
+module.exports = Property;

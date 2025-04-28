@@ -971,31 +971,33 @@
   
   <div class="visits-section">
     <!-- Formulario horizontal -->
+     
     <div class="visits-form-container">
-      <form id="solicitarVisitaForm" class="horizontal-visit-form">
+      <form id="solicitarVisitaForm" action="/programar-visita?origin=dashboard1" method="POST" enctype="application/x-www-form-urlencoded">
         <h3><i class="fas fa-plus-circle"></i> Programar Nueva Visita</h3>
         
         <div class="form-row">
           <div class="form-group-horizontal">
             <label for="propiedadVisita"><i class="fas fa-home"></i> Propiedad</label>
-            <select id="propiedadVisita" required>
+            <select id="propiedadVisita" name="propiedadVisita" required>
               <option value="">Seleccionar propiedad</option>
-              <option value="PROP-001">Casa Residencial en Bosque</option>
-              <option value="PROP-002">Departamento Premium</option>
-              <option value="PROP-003">Oficina Corporativa</option>
+              <option value="PROP-001">Casa</option>
+              <option value="PROP-002">Departamento</option>
+              <option value="PROP-003">Oficina</option>
+              <option value="PROP-003">Terreno</option>
             </select>
           </div>
-          
+      
           <div class="form-group-horizontal">
             <label for="fechaVisita"><i class="far fa-calendar"></i> Fecha</label>
-            <input type="date" id="fechaVisita" required>
+            <input type="date" id="fechaVisita" name="fechaVisita" required>
           </div>
         </div>
         
         <div class="form-row">
           <div class="form-group-horizontal">
             <label for="horaVisita"><i class="far fa-clock"></i> Hora</label>
-            <select id="horaVisita" required>
+            <select id="horaVisita" name="horaVisita" required>
               <option value="">Seleccionar hora</option>
               <option value="09:00">9:00 AM</option>
               <option value="10:00">10:00 AM</option>
@@ -1007,10 +1009,10 @@
           
           <div class="form-group-horizontal">
             <label for="clienteVisita"><i class="fas fa-user"></i> Cliente</label>
-            <select id="clienteVisita" required>
+            <select id="clienteVisita" name="clienteVisita" required>
               <option value="">Seleccionar cliente</option>
               <option value="CLI-001">María González</option>
-              <option value="CLI-002">Carlos Mendoza</option>
+              <option value="CLI-002">Jose Mendoza</option>
               <option value="CLI-003">Ana Torres</option>
             </select>
           </div>
@@ -1161,6 +1163,69 @@
     // Cerrar modal
     document.querySelector('.close-modal').addEventListener('click', function() {
       document.getElementById('mapModal').style.display = 'none';
+    });
+
+
+//GUARDAR CONTRATO
+    document.getElementById('generateContractBtn').addEventListener('click', async function (e) {
+      e.preventDefault();  // Evitar el envío del formulario
+
+      const contrato = {
+        id: document.getElementById('contractId').value,
+        property: document.getElementById('contractProperty').value,
+        client: document.getElementById('contractClient').value,
+        agent: 'Ana Herrera G.',  // Puedes poner un agente predeterminado o permitir seleccionar
+        date: document.getElementById('contractStart').value,
+        type: document.getElementById('contractType').value,
+        price: document.getElementById('contractPrice').value,
+        clauses: document.getElementById('contractClauses').value.split('\n')  // Convertir cláusulas en un array
+      };
+
+      // Enviar los datos al backend
+      try {
+        const response = await fetch('/api/contracts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(contrato)
+        });
+
+        const result = await response.json();
+        if (response.status === 201) {
+          // Mostrar el popup con los detalles del contrato
+          document.getElementById('contractPopup').style.display = 'block';
+          document.getElementById('contractDetails').innerHTML = `
+            <p><strong>ID:</strong> ${contrato.id}</p>
+            <p><strong>Propiedad:</strong> ${contrato.property}</p>
+            <p><strong>Cliente:</strong> ${contrato.client}</p>
+            <p><strong>Agente:</strong> ${contrato.agent}</p>
+            <p><strong>Fecha Inicio:</strong> ${contrato.date}</p>
+            <p><strong>Tipo:</strong> ${contrato.type}</p>
+            <p><strong>Precio:</strong> ${contrato.price}</p>
+            <p><strong>Cláusulas:</strong></p>
+            <ul>
+              ${contrato.clauses.map(clause => `<li>${clause}</li>`).join('')}
+            </ul>
+          `;
+          // Mostrar el botón de ver contrato
+          document.getElementById('viewContractBtn').style.display = 'inline-block';
+        }
+      } catch (error) {
+        console.error('Error al generar contrato:', error);
+      }
+    });
+
+    // Función para cerrar el popup
+    document.getElementById('closePopupBtn').addEventListener('click', function () {
+      document.getElementById('contractPopup').style.display = 'none';
+    });
+
+    // Función para descargar el contrato en PDF
+    document.getElementById('downloadPDFBtn').addEventListener('click', function () {
+      const doc = new jsPDF();
+      const contractDetails = document.getElementById('contractDetails').innerText;
+
+      doc.text(contractDetails, 10, 10);
+      doc.save('contrato.pdf');
     });
 
 

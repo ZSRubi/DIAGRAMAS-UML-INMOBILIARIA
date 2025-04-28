@@ -643,12 +643,12 @@
       <form id="newPropertyForm" class="horizontal-form">
         <div class="form-group">
           <label for="propertyAddress">Dirección</label>
-          <input type="text" id="propertyAddress" required>
+          <input type="text" id="propertyAddress" required name="propertyAddress">
         </div>
         
         <div class="form-group">
           <label for="propertyType">Tipo</label>
-          <select id="propertyType" required>
+          <select id="propertyType" required name="propertyType">
             <option value="">Seleccionar</option>
             <option value="Casa">Casa</option>
             <option value="Departamento">Departamento</option>
@@ -659,13 +659,13 @@
         
         <div class="form-group">
           <label for="propertyPrice">Precio ($)</label>
-          <input type="number" id="propertyPrice" required>
+          <input type="number" id="propertyPrice" required name="propertyPrice">
         </div>
         
         <div class="form-group">
           <label for="propertyPhotos">Fotos</label>
           <div class="photo-upload">
-            <input type="file" id="propertyPhotos" multiple accept="image/*" style="display: none;">
+            <input type="file" id="propertyPhotos" multiple accept="image/*" style="display: none;" name="propertyPhotos">
             <button type="button" class="btn btn-sm" onclick="document.getElementById('propertyPhotos').click()">
               <i class="fas fa-camera"></i> Seleccionar
             </button>
@@ -1134,70 +1134,52 @@ document.getElementById('cancelContractForm').addEventListener('click', function
   document.getElementById('contractFormContainer').style.display = 'none';
 });
 
-    // Generar contrato
-    document.getElementById('contractForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      // Aquí iría la lógica para guardar el contrato
-      alert('Contrato generado exitosamente');
-      this.reset();
-      document.getElementById('contractFormContainer').style.display = 'none';
-    });
 
-    // Ver contrato con cláusulas
-    document.querySelectorAll('.view-contract').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const contract = JSON.parse(this.dataset.contract);
-        const modal = document.getElementById('contractModal');
-        const content = document.getElementById('contractContent');
-        
-        // Generar HTML con cláusulas
-        let clausesHTML = '';
-        contract.clauses.forEach((clause, index) => {
-          clausesHTML += `<p><strong>Cláusula ${index + 1}:</strong> ${clause}</p>`;
-        });
-        
-        content.innerHTML = `
-          <div class="contract-template">
-            <div class="contract-header">
-              <h2 class="contract-title">CONTRATO DE ${contract.type.toUpperCase()}</h2>
-              <p>No. ${contract.id}</p>
-            </div>
-            
-            <div class="contract-details">
-              <div class="contract-detail">
-                <label>Entre:</label>
-                <span>${contract.agent}, en representación de la propiedad ${contract.property}</span>
-              </div>
-              <div class="contract-detail">
-                <label>Y:</label>
-                <span>${contract.client}</span>
-              </div>
-              <div class="contract-detail">
-                <label>Fecha:</label>
-                <span>${contract.date}</span>
-              </div>
-              <div class="contract-detail">
-                <label>Precio:</label>
-                <span>${contract.price}</span>
-              </div>
-              
-              <div class="contract-clauses">
-                <h3>Cláusulas:</h3>
-                ${clausesHTML}
-              </div>
-            </div>
-            
-            <div class="contract-footer">
-              <div class="signature-line">Firma del Cliente</div>
-              <div class="signature-line">Firma del Agente</div>
-            </div>
-          </div>
-        `;
-        
-        modal.style.display = 'block';
-      });
-    });
+//contrato
+
+document.getElementById('contractForm').addEventListener('submit', function (e) {
+  e.preventDefault(); // Evitar el comportamiento por defecto del formulario (recarga de la página)
+
+  // Obtener valores de los campos del formulario
+  const contractData = {
+    property: document.getElementById('contractProperty').value,
+    client: document.getElementById('contractClient').value,
+    type: document.getElementById('contractType').value,
+    start: document.getElementById('contractStart').value,
+    end: document.getElementById('contractEnd').value, // Puede estar vacío si es una venta
+    price: document.getElementById('contractPrice').value,
+    contractId: document.getElementById('contractId').value,
+    clauses: document.getElementById('contractClauses').value.split('\n'), // Suponiendo que cada cláusula está separada por salto de línea
+  };
+
+  // Llamada a la API para guardar el contrato en la base de datos
+  saveContractToDatabase(contractData);
+});
+
+function saveContractToDatabase(contractData) {
+  // Hacer una petición AJAX para enviar los datos al backend
+  fetch('/api/saveContract', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(contractData)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      alert('Contrato generado y guardado correctamente.');
+      // Aquí puedes agregar un popup o mostrar el contrato
+    } else {
+      alert('Error al guardar el contrato.');
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    alert('Hubo un error al guardar el contrato.');
+  });
+}
+
 
     // Cerrar modal
     document.querySelector('.close-modal').addEventListener('click', function() {
@@ -1211,6 +1193,92 @@ document.getElementById('cancelContractForm').addEventListener('click', function
       // const element = document.getElementById('contractContent');
       // html2pdf().from(element).save('contrato.pdf');
     });
+
+
+
+    //-------------------------------------
+        document.getElementById('propertyPhotos').addEventListener('change', function(event) {
+        const photoCount = document.getElementById('photoCount');
+        const photoPreviews = document.getElementById('photoPreviews');
+        const files = event.target.files;
+        
+        photoCount.textContent = `${files.length} fotos seleccionadas`;
+
+        // Limpiar las vistas previas anteriores
+        photoPreviews.innerHTML = '';
+        
+        // Mostrar las vistas previas de las fotos
+        Array.from(files).forEach(file => {
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(file);
+          img.style.width = '50px';
+          img.style.height = '50px';
+          photoPreviews.appendChild(img);
+        });
+      });
+
+      document.getElementById('newPropertyForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        
+        const formData = new FormData();
+        formData.append('propertyAddress', document.getElementById('propertyAddress').value);
+        formData.append('propertyType', document.getElementById('propertyType').value);
+        formData.append('propertyPrice', document.getElementById('propertyPrice').value);
+        Array.from(document.getElementById('propertyPhotos').files).forEach(file => {
+          formData.append('propertyPhotos', file);
+        });
+
+        try {
+          const response = await fetch('/api/properties', {
+            method: 'POST',
+            body: formData
+          });
+
+          const result = await response.json();
+          // if (response.ok) {
+          //   alert('Propiedad guardada exitosamente');
+          //   // Redirigir o limpiar el formulario según sea necesario
+          // } else {
+          //   alert('Hubo un error al guardar la propiedad');
+          // }
+        } catch (error) {
+          console.error('Error al enviar el formulario:', error);
+          alert('Error al guardar la propiedad');
+        }
+      });
+
+
+        // Función para cargar las propiedades y clientes en los selects
+      async function cargarAgendados() {
+        try {
+          const response = await fetch('/api/agendados');
+          const agendados = await response.json();
+          
+          // Llenar el select de propiedades
+          const selectProperty = document.getElementById('contractProperty');
+          agendados.forEach(agendado => {
+            const option = document.createElement('option');
+            option.value = agendado.propiedad.nombre; // Asumiendo que propiedad tiene un campo nombre
+            option.textContent = `${agendado.propiedad.direccion} (${agendado.propiedad.tipo})`; // Asume que propiedad tiene estos campos
+            selectProperty.appendChild(option);
+          });
+
+          // Llenar el select de clientes
+          const selectClient = document.getElementById('contractClient');
+          agendados.forEach(agendado => {
+            const option = document.createElement('option');
+            option.value = agendado.cliente.nombre; // Asumiendo que cliente tiene un campo nombre
+            option.textContent = agendado.cliente.nombre; // O cualquier otro campo que quieras mostrar
+            selectClient.appendChild(option);
+          });
+
+        } catch (error) {
+          console.error('Error al cargar los agendados:', error);
+        }
+      }
+
+      // Llamar la función para cargar los agendados al cargar la página
+      window.onload = cargarAgendados;
   </script>
   <script src="./assets/js/chat-loader.js"></script>
 
