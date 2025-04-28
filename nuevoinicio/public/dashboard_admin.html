@@ -668,82 +668,182 @@
     </main>
   </div>
 
-  <script>
-    // Manejo del menú desplegable
-    document.querySelector('.nav-parent').addEventListener('click', function() {
-      this.classList.toggle('active');
-    });
-    // Obtener datos del usuario del localStorage
-    const nombre = localStorage.getItem('nombre') || "Administrador Demo"; // Si no hay nombre en localStorage, usa el demo
-    const correo = localStorage.getItem('correo') || "admin@demo.com";
-    const id = localStorage.getItem('id') || "ADM-123";
-    const rol = localStorage.getItem('rol') || "admin"; // Rol por defecto
+  <script src="/socket.io/socket.io.js"></script>
+<script>
+  const socket = io(); // Conectamos el socket al servidor
 
-    // Asignar valores al DOM
+  // Manejo del menú desplegable
+  document.querySelector('.nav-parent').addEventListener('click', function() {
+    this.classList.toggle('active');
+  });
+
+  // Obtener datos del usuario del localStorage
+  const nombre = localStorage.getItem('nombre') || "Administrador Demo";
+  const correo = localStorage.getItem('correo') || "admin@demo.com";
+  const id = localStorage.getItem('id') || "ADM-123";
+  const rol = localStorage.getItem('rol') || "admin";
+
+  // Apenas se conecta el socket
+  socket.on('connect', () => {
+    console.log('✅ Socket conectado con ID:', socket.id);
+
+    // Enviar rol e id correctos al servidor
+    socket.emit('set-role', {
+      role: rol,
+      id: id
+    });
+  });
+
+  // Asignar valores al DOM
+  document.getElementById('nombreUsuario').textContent = nombre;
+  document.getElementById('correoUsuario').textContent = correo;
+  document.getElementById('idUsuario').textContent = id;
+  document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase();
+
+  // Mostrar datos del usuario
+  if(nombre) {
     document.getElementById('nombreUsuario').textContent = nombre;
-    document.getElementById('correoUsuario').textContent = correo;
-    document.getElementById('idUsuario').textContent = id;
-    document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase(); // Inicial del nombre
+    document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase();
+  }
 
-    // Mostrar datos del usuario
-    if(nombre) {
-      document.getElementById('nombreUsuario').textContent = nombre;
-      document.getElementById('avatarInitials').textContent = nombre.charAt(0).toUpperCase();
-    }
+  // Verificar rol
+  if(rol !== 'admin') {
+    window.location.href = 'login.html';
+  }
 
-    // Verificar rol
-    if(rol !== 'admin') {
-      window.location.href = 'login.html';
-    }
+  // Función para cerrar sesión
+  function cerrarSesion() {
+    localStorage.clear();
+    window.location.href = 'login.html';
+  }
 
-    // Función para cerrar sesión
-    function cerrarSesion() {
-      localStorage.clear();
-      window.location.href = 'login.html';
-    }
-
-    // Activar elemento del menú según sección visible
-    const navItems = document.querySelectorAll('.nav-item');
-    const sections = document.querySelectorAll('.section');
+  // Activar elemento del menú según sección visible
+  const navItems = document.querySelectorAll('.nav-item');
+  const sections = document.querySelectorAll('.section');
+  
+  window.addEventListener('scroll', () => {
+    let current = '';
     
-    window.addEventListener('scroll', () => {
-      let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop;
+      const sectionHeight = section.clientHeight;
       
-      sections.forEach(section => {
-        const sectionTop = section.offsetTop;
-        const sectionHeight = section.clientHeight;
-        
-        if(pageYOffset >= (sectionTop - 300)) {
-          current = section.getAttribute('id');
-        }
-      });
-      
-      navItems.forEach(item => {
-        item.classList.remove('active');
-        const href = item.parentElement.getAttribute('href');
-        if(href === `#${current}`) {
-          item.classList.add('active');
-        }
-      });
+      if(pageYOffset >= (sectionTop - 300)) {
+        current = section.getAttribute('id');
+      }
     });
+    
+    navItems.forEach(item => {
+      item.classList.remove('active');
+      const href = item.parentElement.getAttribute('href');
+      if(href === `#${current}`) {
+        item.classList.add('active');
+      }
+    });
+  });
 
-    // Smooth scroll para los enlaces del menú
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        const targetId = this.getAttribute('href');
-        const targetElement = document.querySelector(targetId);
-        
-        window.scrollTo({
-          top: targetElement.offsetTop - 20,
-          behavior: 'smooth'
-        });
-        
-        // Actualizar clase activa
-        navItems.forEach(item => item.classList.remove('active'));
-        this.querySelector('.nav-item').classList.add('active');
+  // Smooth scroll para los enlaces del menú
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href');
+      const targetElement = document.querySelector(targetId);
+      
+      window.scrollTo({
+        top: targetElement.offsetTop - 20,
+        behavior: 'smooth'
       });
+      
+      // Actualizar clase activa
+      navItems.forEach(item => item.classList.remove('active'));
+      this.querySelector('.nav-item').classList.add('active');
     });
-  </script>
+  });
+</script>
+
+<script src="./assets/js/chat-loader.js"></script>
+
 </body>
 </html>
+  </head>
+  <body>
+    <div class="chat-floating">
+      <div class="card" style="background-color: var(--color-gris-claro)">
+        <div class="card-body">
+          <div class="message-container" id="messages">
+            <!-- Mensajes del chat -->
+          </div>
+
+          <div class="footer-input">
+            <input
+              type="text"
+              id="inputPrompt"
+              class="form-control"
+              placeholder="Ask your question..."
+            />
+            <button
+              class="btn btn-success"
+              id="sendPromptBtn"
+              onclick="GetResponse()"
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function GetResponse() {
+        sendPromptBtn.innerHTML = `Sending <div class="spinner-border spinner-border-sm" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>`;
+        
+        const promptValue = inputPrompt.value;
+        messages.innerHTML += `<div class="chat-box">
+          <div class="user-message">
+            <small class="text-decoration-underline">You</small>
+            <p>${promptValue}</p>
+          </div>
+        </div>`;
+
+        // Preparar los datos de la solicitud
+        const requestData = {
+          model: "meta-llama/llama-4-scout-17b-16e-instruct",
+          messages: [
+            {
+              role: "user",
+              content: promptValue
+            }
+          ]
+        };
+
+        // Hacer la solicitud con fetch
+        fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer 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"
+          },
+          body: JSON.stringify(requestData)
+        })
+        .then((response) => response.json())  // Convertir la respuesta a JSON
+        .then((data) => {
+          // Mostrar la respuesta de la IA
+          messages.innerHTML += `<div class="chat-box">
+            <div class="assistant-message">
+              <small class="text-decoration-underline">Virtual Assistent</small>
+              <p>${data.choices[0].message.content}</p>
+            </div>
+          </div>`;
+          inputPrompt.value = "";  // Limpiar el campo de texto
+          sendPromptBtn.innerHTML = "Send";  // Restaurar el texto del botón
+        })
+        .catch((error) => {
+          console.error("Error al contactar con la API:", error);
+        });
+      }
+    </script>
+  </body>
+</html>
+

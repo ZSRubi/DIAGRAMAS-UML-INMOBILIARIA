@@ -932,6 +932,97 @@
   </div>
 
   <script>
+    // Funcionalida dde registrar formulario
+    document.getElementById('newPropertyForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Obtener valores del formulario
+      const address = document.getElementById('propertyAddress').value;
+      const type = document.getElementById('propertyType').value;
+      const price = document.getElementById('propertyPrice').value;
+      const photosInput = document.getElementById('propertyPhotos');
+      
+      // Validación básica
+      if (!address || !type || !price) {
+        alert('Por favor complete todos los campos requeridos');
+        return;
+      }
+
+      // Crear FormData para enviar archivos
+      const formData = new FormData();
+      formData.append('address', address);
+      formData.append('type', type);
+      formData.append('price', price);
+      
+      // Agregar archivos seleccionados
+      for (let i = 0; i < photosInput.files.length; i++) {
+        formData.append('photos', photosInput.files[i]);
+      }
+
+      try {
+        // Obtener token JWT del localStorage (asumiendo que usas autenticación)
+        const token = localStorage.getItem('token');
+        
+        const response = await fetch('/api/properties', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert('Propiedad creada exitosamente');
+          // Resetear formulario
+          e.target.reset();
+          document.getElementById('photoCount').textContent = '0 fotos seleccionadas';
+          document.getElementById('photoPreviews').innerHTML = '';
+          // Ocultar formulario o redirigir
+          document.getElementById('propertyForm').style.display = 'none';
+        } else {
+          throw new Error(data.message || 'Error al crear propiedad');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert(`Error: ${error.message}`);
+      }
+    });
+
+    // Mostrar vista previa de imágenes
+    document.getElementById('propertyPhotos').addEventListener('change', function(e) {
+      const previewContainer = document.getElementById('photoPreviews');
+      const countElement = document.getElementById('photoCount');
+      
+      previewContainer.innerHTML = '';
+      countElement.textContent = `${e.target.files.length} foto(s) seleccionada(s)`;
+      
+      Array.from(e.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = document.createElement('img');
+          img.src = event.target.result;
+          img.classList.add('img-thumbnail', 'mr-2');
+          img.style.maxHeight = '100px';
+          previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    // Botón cancelar
+    document.getElementById('cancelPropertyForm').addEventListener('click', () => {
+      document.getElementById('propertyForm').style.display = 'none';
+    });
+
+
+
+
+
+    // Fin de formulario
+
+
     // Mostrar/ocultar formulario
     document.getElementById('togglePropertyForm').addEventListener('click', function() {
       const form = document.getElementById('propertyForm');
@@ -1121,5 +1212,7 @@ document.getElementById('cancelContractForm').addEventListener('click', function
       // html2pdf().from(element).save('contrato.pdf');
     });
   </script>
+  <script src="./assets/js/chat-loader.js"></script>
+
 </body>
 </html>
